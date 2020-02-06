@@ -1,0 +1,27 @@
+{
+  "name": "neuroglancer-url-tools",
+  "version": "0.0.0",
+  "description": "Synthesizing URLs for the neuroglancer visualization tool.",
+  "main": "index.js",
+  "dependencies": {
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "\"echo \\\"Error: no test specified\\\" && exit 1\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/janelia-cosem/neuroglancer-url-tools.git"
+  },
+  "keywords": [
+    "neuroglancer"
+  ],
+  "author": "Davis Bennett",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/janelia-cosem/neuroglancer-url-tools/issues"
+  },
+  "homepage": "https://github.com/janelia-cosem/neuroglancer-url-tools#readme"
+}
