@@ -1,7 +1,7 @@
 {
-  "name": "neuroglancer-url-tools",
+  "name": "@janelia-cosem/neuroglancer-url-tools",
   "version": "0.0.0",
-  "description": "Synthesizing URLs for the neuroglancer visualization tool.",
+  "description": "",
   "main": "index.js",
   "dependencies": {
     "ts-loader": "^6.2.1",
@@ -9,7 +9,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "\"echo \\\"Error: no test specified\\\" && exit 1\""
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
