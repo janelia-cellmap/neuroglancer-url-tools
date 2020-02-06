@@ -1,8 +1,9 @@
 {
   "name": "@janelia-cosem/neuroglancer-url-tools",
+  "type": "module",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "dependencies": {
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.5"
