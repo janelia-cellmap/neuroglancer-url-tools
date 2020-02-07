@@ -27,7 +27,7 @@
     "zarr": "^0.1.5"
   },
   "scripts": {
-    "test": "echo No test specified\" && exit 0",
+    "test": "echo No test specified\"",
     "prepublish": "npm run build",
     "build": "tsc && rollup -c rollup.config.ts"
   },
