@@ -1,7 +1,7 @@
 {
   "name": "@janelia-cosem/neuroglancer-url-tools",
   "type": "module",
-  "version": "0.0.0-development",
+  "version": "0.1.0",
   "description": "",
   "main": "dist/neuroglancer-url-tools.umd.js",
   "module": "dist/neuroglancer-url-tools.es5.js",
