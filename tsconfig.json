@@ -15,9 +15,9 @@
     "sourceMap": true,
     "noImplicitAny": true,
     "declaration": true,
-    "declarationDir": "./dist/types",
+    "declarationDir": "dist/types",
     "esModuleInterop": true,
-    "outDir": "./dist/lib",
+    "outDir": "dist/lib",
     "typeRoots": [
       "node_modules/@types"
     ]
