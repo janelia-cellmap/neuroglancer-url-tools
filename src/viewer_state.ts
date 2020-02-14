@@ -47,17 +47,16 @@ export class Layer {
          }
 }
 
-
 export class ViewerState {
     constructor(
         readonly dimensions: Space,
         readonly position: number[],
-        readonly crossSectionOrientation: number[],
-        readonly crossSectionScale: number[],
-        readonly projectionOrientation: number[],
-        readonly projectionScale: number[],
+        readonly crossSectionOrientation: number[] | undefined,
+        readonly crossSectionScale: number | undefined,
+        readonly projectionOrientation: number[] | undefined,
+        readonly projectionScale: number | undefined,
         readonly layers: Layer[],
-        readonly selectedLayer: string
+        readonly selectedLayer: string | undefined
     ) { }
 }
 

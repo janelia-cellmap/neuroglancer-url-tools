@@ -1,12 +1,3 @@
-
-  export function objectFromJSON(url: string): any {
-    return fetch(url)
-      .then(response => {
-        return response.json();
-      })
-      .catch(error => console.log(`Failed because: ${error}`));
-  };
-
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -30,7 +21,7 @@ function swapQuotes(x: string) {
     });
 }
 
-function urlSafeStringifyString(x: string) {
+export function urlSafeStringifyString(x: string) {
     return swapQuotes(JSON.stringify(swapQuotes(x)));
 }
 
