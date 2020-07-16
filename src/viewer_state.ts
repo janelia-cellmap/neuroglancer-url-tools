@@ -1,62 +1,244 @@
-export interface Space {
+export interface CoordinateSpace {
     [key: string]: [number, string]
 }
 
-export class Transform {
-    constructor(
-        readonly matrix: number[][],
-        readonly outputDimensions: Space,
-        readonly inputDimensions: Space) { }
+export interface CoordinateSpaceTransform {            
+        outputDimensions: CoordinateSpace,        
+        inputDimensions?: CoordinateSpace,
+        matrix?: number[][],
+        sourceRank?: number
 }
 
-export class LayerDataSource {
-    constructor(
-        readonly url: string,
-        readonly transform: Transform,
-        readonly enableDefaultSubsources?: boolean) { }
+export interface LayerDataSource {    
+        url: string,
+        CoordinateSpaceTransform: CoordinateSpaceTransform,
+        enableDefaultSubsources?: boolean
 }
 
-export interface skeletonRendering {
-    readonly mode2d: string;
-    readonly mode3d: string
+export interface skeletonRenderingOptions {
+    shader?: string;
+    shaderControls?: Map<string, number>;
+    mode2d?: string;
+    lineWidth2d?: number;    
+    mode3d?: string;
+    lineWidth3d?: number;    
 }
 
-export class Layer {
-    readonly type: string;
-    readonly source: LayerDataSource | LayerDataSource[];
-    readonly tab: string;
-    readonly name: string;
-    readonly blend: string;
-    readonly skeletonRendering?: skeletonRendering;
-    readonly shader?: string;
+
+export class Layer{
+    type: string;
+    tab?: string;
+    pick?: boolean;
+    tool?: string;
     constructor(
         type: string,
-        source: LayerDataSource | LayerDataSource[],       
-        tab: string = "source", 
-        name: string,
-        blend: string = "default",
-        skeletonRendering?: skeletonRendering,
-        shader?: string) {
+        tab: string='source',
+        pick?: boolean,
+        tool?: string
+        ){
             this.type = type;
-            this.source = source;
             this.tab = tab;
-            this.name = name;
+            this.pick = pick;
+            this.tool = tool
+        }
+}
+
+export class ImageLayer extends Layer {    
+    source: LayerDataSource | LayerDataSource[];         
+    shader: string;
+    shaderControls: Map<string, number>;
+    opacity?: number;
+    blend: string;    
+    crossSectionRenderScale?: number;
+    constructor(                       
+        tab: string,
+        pick: boolean | undefined,
+        tool: string | undefined,
+        source: LayerDataSource | LayerDataSource[],        
+        opacity: number | undefined = 0.5,
+        blend: string,
+        shader: string,
+        shaderControls: Map<string, number>,
+        crossSectionRenderScale: number | undefined = 1) {
+            super('image', tab, pick, tool)
+            this.source = source;
             this.blend = blend;
-            if (this.type == "image") {this.shader = shader}
-            if (this.type == "segmentation") {this.skeletonRendering = skeletonRendering}
+            this.opacity = opacity;
+            this.shader = shader;
+            this.shaderControls = shaderControls;
+            this.crossSectionRenderScale = crossSectionRenderScale;
          }
 }
 
-export class ViewerState {
+export class SegmentationLayer extends Layer {    
+    source: LayerDataSource | LayerDataSource[];    
+    segments: number[];
+    equivalences: Array<number[]>;
+    hideSegmentZero?: boolean;
+    selectedAlpha?: number;
+    notSelectedAlpha?: number;
+    objectAlpha?: number;
+    saturation?: number
+    ignoreNullVisibleSet?: boolean;
+    skeletonRendering?: skeletonRenderingOptions;    
+    colorSeed?: number;
+    crossSectionRenderScale?: number;
+    meshRenderScale?: number;
+    meshSilhouetteRendering?: number;
+    segmentQuery?: string;
+    constructor(        
+        source: LayerDataSource | LayerDataSource[],       
+        tab: string,
+        pick: boolean | undefined,
+        tool: string | undefined,
+        segments: number[],
+        equivalences: Array<number[]>,
+        hideSegmentZero?: boolean,
+        selectedAlpha?: number,
+        notSelectedAlpha?: number,
+        objectAlpha?: number,
+        saturation?: number,
+        ignoreNullVisibleSet?: boolean,
+        skeletonRendering?: skeletonRenderingOptions,
+        colorSeed?: number,
+        crossSectionRenderScale?: number,
+        meshRenderScale?: number,
+        meshSilhouetteRendering?: number,
+        segmentQuery?: string,
+        ) 
+        {
+            super('segmentation', tab, pick, tool)
+            this.source = source;            
+            this.segments = segments;
+            this.equivalences = equivalences;
+            this.saturation = saturation;
+            this.hideSegmentZero = hideSegmentZero;
+            this.selectedAlpha = selectedAlpha;
+            this.notSelectedAlpha = notSelectedAlpha;
+            this.objectAlpha = objectAlpha;
+            this.ignoreNullVisibleSet = ignoreNullVisibleSet;
+            this.skeletonRendering = skeletonRendering;
+            this.colorSeed = colorSeed;
+            this.crossSectionRenderScale = crossSectionRenderScale;
+            this.meshRenderScale = meshRenderScale;
+            this.meshSilhouetteRendering = meshSilhouetteRendering;
+            this.segmentQuery = segmentQuery
+         }
+}
+
+export class SingleMeshLayer extends Layer{
+    source: LayerDataSource[];
+    vertexAttributeSources?: string[];
+    shader: string;
+    vertexAttributeNames?: string[];
     constructor(
-        readonly dimensions: Space,
-        readonly position: number[],
-        readonly crossSectionOrientation: number[] | undefined,
-        readonly crossSectionScale: number | undefined,
-        readonly projectionOrientation: number[] | undefined,
-        readonly projectionScale: number | undefined,
-        readonly layers: Layer[],
-        readonly selectedLayer: string | undefined
-    ) { }
+        tab: string,
+        pick: boolean | undefined,
+        tool: string | undefined,
+        source: LayerDataSource[],
+        shader: string,
+        vertexAttributeSources?: string[],
+        vertexAttributeNames?: string[]){
+            super('mesh', tab, pick, tool)
+            this.source = source;
+            this.shader=  shader;
+            this.vertexAttributeSources=vertexAttributeSources;
+            this.vertexAttributeNames=vertexAttributeNames;
+        }
+}
+
+export class ManagedLayer{
+    name: string;
+    layer: ImageLayer | SegmentationLayer;
+    constructor(
+        name: string, 
+        layer: ImageLayer | SegmentationLayer){
+        this.name = name;
+        this.layer = layer;
+    }
+}
+
+export interface SelectedLayerState{
+    visible?: boolean;
+    size?: number;
+    layer?: string
+}
+
+export interface StatisticsDisplayState{
+    visible?: boolean;
+    size?: number;
+}
+
+export class ViewerState {
+        dimensions: CoordinateSpace;
+        dimensionRenderScales?: Map<string, number>;
+        position: number[];
+        crossSectionScale?: number;
+        crossSectionDepth?: number;
+        crossSectionOrientation?: number[];
+        projectionScale?: number;
+        projectionDepth?: number;
+        projectionOrientation?: number[];
+        showSlices?: boolean;
+        showAxisLines?: boolean;
+        showDefaultAnnotations?: boolean;
+        gpuMemoryLimit?: number;
+        systemMemoryLimit?: number;
+        concurrentDownloads?: number;
+        prefetch?: boolean = true;
+        layers: Layer[];
+        layout: string;
+        crossSectionBackgroundColor?: string;
+        projectionBackgroundColor?: string;
+        selectedLayer?: SelectedLayerState; 
+        statistics?: StatisticsDisplayState;
+
+    constructor(
+        dimensions: CoordinateSpace,        
+        position: number[],
+        layers: Layer[],
+        layout: string,
+        dimensionRenderScales?: Map<string, number>,        
+        crossSectionScale?: number,
+        crossSectionDepth?: number,
+        crossSectionOrientation?: number[],
+        projectionScale?: number,
+        projectionDepth?: number,
+        projectionOrientation?: number[],
+        showSlices: boolean | undefined= true,
+        showAxisLines: boolean | undefined = true,
+        showDefaultAnnotations: boolean | undefined = true,
+        gpuMemoryLimit?: number,
+        systemMemoryLimit?: number,
+        concurrentDownloads?: number,
+        prefetch: boolean | undefined = true,        
+        crossSectionBackgroundColor?: string,
+        projectionBackgroundColor?: string,
+        selectedLayer?: SelectedLayerState, 
+        statistics?: StatisticsDisplayState
+    ) {
+        this.dimensions = dimensions;
+        this.dimensionRenderScales = dimensionRenderScales;
+        this.position = position;
+        this.crossSectionScale = crossSectionScale;
+        this.crossSectionDepth = crossSectionDepth;
+        this.crossSectionOrientation = crossSectionOrientation;
+        this.projectionScale = projectionScale;
+        this.projectionDepth = projectionDepth,
+        this.projectionOrientation = projectionOrientation;
+        this.showSlices= showSlices;
+        this.showAxisLines = showAxisLines;
+        this.showDefaultAnnotations = showDefaultAnnotations;
+        this.gpuMemoryLimit = gpuMemoryLimit;
+        this.systemMemoryLimit = systemMemoryLimit;
+        this.concurrentDownloads = concurrentDownloads;
+        this.prefetch = prefetch;
+        this.layers = layers;
+        this.layout = layout;
+        this.crossSectionBackgroundColor = crossSectionBackgroundColor;
+        this.projectionBackgroundColor = projectionBackgroundColor;
+        this.selectedLayer = selectedLayer; 
+        this.statistics = statistics;  
+     }
 }
 
