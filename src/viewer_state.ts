@@ -45,7 +45,7 @@ export class Layer{
 
 export class ImageLayer extends Layer {    
     source: LayerDataSource | LayerDataSource[];         
-    shader: string;
+    shader: string | undefined;
     shaderControls: Map<string, number>;
     opacity?: number;
     blend: string;    
@@ -57,15 +57,15 @@ export class ImageLayer extends Layer {
         source: LayerDataSource | LayerDataSource[],        
         opacity: number | undefined = 0.5,
         blend: string,
-        shader: string,
         shaderControls: Map<string, number>,
+        shader?: string,
         crossSectionRenderScale: number | undefined = 1) {
             super('image', tab, pick, tool)
             this.source = source;
             this.blend = blend;
             this.opacity = opacity;
-            this.shader = shader;
             this.shaderControls = shaderControls;
+            this.shader = shader;
             this.crossSectionRenderScale = crossSectionRenderScale;
          }
 }
