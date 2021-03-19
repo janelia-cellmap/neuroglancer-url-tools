@@ -42,7 +42,7 @@ export class Layer{
             this.tab = tab;
             this.pick = pick;
             this.tool = tool
-            this.name = name;
+            this.name=name            
         }
 }
 
@@ -57,7 +57,7 @@ export class ImageLayer extends Layer {
         tab: string | undefined,
         pick: boolean | undefined,
         tool: string | undefined,
-        name: string | undefined,
+        name: string,
         source: LayerDataSource | LayerDataSource[],        
         opacity: number | undefined = 0.5,
         blend?: string,
@@ -90,12 +90,12 @@ export class SegmentationLayer extends Layer {
     meshRenderScale?: number;
     meshSilhouetteRendering?: number;
     segmentQuery?: string;
-    constructor(        
-        source: LayerDataSource | LayerDataSource[],       
-        tab?: string,
-        pick?: boolean,
-        tool?: string,
-        name? : string,
+    constructor(               
+        tab: string | undefined,
+        pick: boolean | undefined,
+        tool: string | undefined,
+        name : string,
+        source: LayerDataSource | LayerDataSource[],
         segments?: number[] ,
         equivalences?: Array<number[]>,
         hideSegmentZero?: boolean,
@@ -137,7 +137,7 @@ export class SingleMeshLayer extends Layer{
     shader: string;
     vertexAttributeNames?: string[];
     constructor(
-        tab: string,
+        tab: string | undefined,
         pick: boolean | undefined,
         tool: string | undefined,
         source: LayerDataSource[],
