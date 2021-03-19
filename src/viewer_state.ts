@@ -30,50 +30,54 @@ export class Layer{
     tab?: string;
     pick?: boolean;
     tool?: string;
+    name?: string
     constructor(
         type: string,
         tab: string='source',
         pick?: boolean,
-        tool?: string
+        tool?: string,
+        name?: string
         ){
             this.type = type;
             this.tab = tab;
             this.pick = pick;
             this.tool = tool
+            this.name = name;
         }
 }
 
 export class ImageLayer extends Layer {    
     source: LayerDataSource | LayerDataSource[];         
-    shader: string | undefined;
-    shaderControls: Map<string, number>;
+    shader?: string;
+    shaderControls?: Map<string, number>;
     opacity?: number;
-    blend: string;    
+    blend?: string;    
     crossSectionRenderScale?: number;
     constructor(                       
-        tab: string,
+        tab: string | undefined,
         pick: boolean | undefined,
         tool: string | undefined,
+        name: string | undefined,
         source: LayerDataSource | LayerDataSource[],        
         opacity: number | undefined = 0.5,
-        blend: string,
-        shaderControls: Map<string, number>,
+        blend?: string,
         shader?: string,
+        shaderControls?: Map<string, number>,
         crossSectionRenderScale: number | undefined = 1) {
-            super('image', tab, pick, tool)
+            super('image', tab, pick, tool, name)
             this.source = source;
             this.blend = blend;
             this.opacity = opacity;
-            this.shaderControls = shaderControls;
             this.shader = shader;
+            this.shaderControls = shaderControls;
             this.crossSectionRenderScale = crossSectionRenderScale;
          }
 }
 
 export class SegmentationLayer extends Layer {    
     source: LayerDataSource | LayerDataSource[];    
-    segments: number[];
-    equivalences: Array<number[]>;
+    segments?: number[];
+    equivalences?: Array<number[]>;
     hideSegmentZero?: boolean;
     selectedAlpha?: number;
     notSelectedAlpha?: number;
@@ -88,11 +92,12 @@ export class SegmentationLayer extends Layer {
     segmentQuery?: string;
     constructor(        
         source: LayerDataSource | LayerDataSource[],       
-        tab: string,
-        pick: boolean | undefined,
-        tool: string | undefined,
-        segments: number[],
-        equivalences: Array<number[]>,
+        tab?: string,
+        pick?: boolean,
+        tool?: string,
+        name? : string,
+        segments?: number[] ,
+        equivalences?: Array<number[]>,
         hideSegmentZero?: boolean,
         selectedAlpha?: number,
         notSelectedAlpha?: number,
@@ -107,7 +112,7 @@ export class SegmentationLayer extends Layer {
         segmentQuery?: string,
         ) 
         {
-            super('segmentation', tab, pick, tool)
+            super('segmentation', tab, pick, tool, name)
             this.source = source;            
             this.segments = segments;
             this.equivalences = equivalences;
@@ -172,7 +177,7 @@ export interface StatisticsDisplayState{
 export class ViewerState {
         dimensions: CoordinateSpace;
         dimensionRenderScales?: Map<string, number>;
-        position: number[];
+        position?: number[];
         crossSectionScale?: number;
         crossSectionDepth?: number;
         crossSectionOrientation?: number[];
@@ -195,7 +200,7 @@ export class ViewerState {
 
     constructor(
         dimensions: CoordinateSpace,        
-        position: number[],
+        position: number[] | undefined,
         layers: Layer[],
         layout: string,
         dimensionRenderScales?: Map<string, number>,        
