@@ -86,6 +86,7 @@ export class SegmentationLayer extends Layer {
     ignoreNullVisibleSet?: boolean;
     skeletonRendering?: skeletonRenderingOptions;    
     colorSeed?: number;
+    segmentDefaultColor?: string;
     crossSectionRenderScale?: number;
     meshRenderScale?: number;
     meshSilhouetteRendering?: number;
@@ -106,6 +107,7 @@ export class SegmentationLayer extends Layer {
         ignoreNullVisibleSet?: boolean,
         skeletonRendering?: skeletonRenderingOptions,
         colorSeed?: number,
+        segmentDefaultColor?: string,
         crossSectionRenderScale?: number,
         meshRenderScale?: number,
         meshSilhouetteRendering?: number,
@@ -124,6 +126,7 @@ export class SegmentationLayer extends Layer {
             this.ignoreNullVisibleSet = ignoreNullVisibleSet;
             this.skeletonRendering = skeletonRendering;
             this.colorSeed = colorSeed;
+            this.segmentDefaultColor = segmentDefaultColor;
             this.crossSectionRenderScale = crossSectionRenderScale;
             this.meshRenderScale = meshRenderScale;
             this.meshSilhouetteRendering = meshSilhouetteRendering;
